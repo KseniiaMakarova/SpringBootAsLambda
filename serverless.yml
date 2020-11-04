@@ -1,0 +1,24 @@
+service: lambda-boot
+
+provider:
+  name: aws
+  runtime: java11
+  memorySize: 1512
+  timeout: 900
+  region: eu-central-1
+  stage: v1
+  profile: ${opt:profile, "default"}
+  endpointType: REGIONAL
+
+package:
+  individually: true
+
+functions:
+  lambda-boot-function:
+    package:
+      artifact: target/boot-0.0.1-SNAPSHOT-lambda-package.zip
+    handler: com.lambda.boot.StreamLambdaHandler::handleRequest
+    events:
+      - http:
+          path: /
+          method: ANY
