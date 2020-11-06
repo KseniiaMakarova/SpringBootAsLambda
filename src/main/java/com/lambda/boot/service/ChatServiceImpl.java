@@ -5,6 +5,7 @@ import com.lambda.boot.repository.ChatRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
+import java.util.Random;
 
 @Service
 public class ChatServiceImpl implements ChatService {
@@ -12,7 +13,9 @@ public class ChatServiceImpl implements ChatService {
     private ChatRepository chatRepository;
 
     @Override
-    public Chat save(Chat chat) {
+    public Chat createNewChat() {
+        Chat chat = new Chat();
+        chat.setText("text " + new Random().nextInt(100));
         return chatRepository.save(chat);
     }
 

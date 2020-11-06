@@ -5,7 +5,7 @@ import com.lambda.boot.model.Chat;
 import java.util.List;
 
 public interface ChatService {
-    Chat save(Chat chat);
+    Chat createNewChat();
 
     List<Chat> getAll();
 

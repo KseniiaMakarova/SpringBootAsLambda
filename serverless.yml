@@ -1,5 +1,15 @@
 service: lambda-boot
 
+plugins:
+  - serverless-plugin-warmup
+
+custom:
+  warmup:
+    timeout: 20
+    prewarm: true
+  main_class: com.lambda.boot.BootApplication
+  basePath: lambda-boot
+
 provider:
   name: aws
   runtime: java11
@@ -22,3 +32,12 @@ functions:
       - http:
           path: /
           method: ANY
+          cors: true
+      - http:
+          path: /ws
+          method: ANY
+          cors: true
+      - http:
+          path: /login
+          method: ANY
+          cors: true
