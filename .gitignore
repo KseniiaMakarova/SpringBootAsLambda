@@ -5,6 +5,7 @@ target/
 !**/src/test/**/target/
 .serverless/
 node_modules/
+.un~
 
 ### STS ###
 .apt_generated
