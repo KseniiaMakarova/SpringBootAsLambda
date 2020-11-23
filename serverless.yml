@@ -27,14 +27,11 @@ functions:
   lambda-boot-function:
     package:
       artifact: target/boot-0.0.1-SNAPSHOT-lambda-package.zip
-    handler: com.lambda.boot.StreamLambdaHandler::handleRequest
+    handler: com.lambda.boot.StreamLambdaHandler
     events:
+      - websocket: $connect
       - http:
-          path: /
-          method: ANY
-          cors: true
-      - http:
-          path: /ws
+          path: /chat
           method: ANY
           cors: true
       - http:

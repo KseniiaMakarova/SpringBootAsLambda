@@ -11,13 +11,13 @@ public class ChatController {
     @Autowired
     private ChatService chatService;
 
-    @RequestMapping(path = "/", method = RequestMethod.POST)
+    @RequestMapping(path = "/chat", method = RequestMethod.POST)
     public String createChat() {
         chatService.createNewChat();
-        return "success!";
+        return "new chat was created!";
     }
 
-    @RequestMapping(path = "/", method = RequestMethod.GET)
+    @RequestMapping(path = "/chat", method = RequestMethod.GET)
     public List<Chat> getChats() {
         return chatService.getAll();
     }

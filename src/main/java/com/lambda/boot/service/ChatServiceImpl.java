@@ -14,6 +14,7 @@ public class ChatServiceImpl implements ChatService {
 
     @Override
     public Chat createNewChat() {
+        System.out.println("I am in the chatService");
         Chat chat = new Chat();
         chat.setText("text " + new Random().nextInt(100));
         return chatRepository.save(chat);
