@@ -1,12 +1,6 @@
 service: lambda-boot
 
-plugins:
-  - serverless-plugin-warmup
-
 custom:
-  warmup:
-    timeout: 20
-    prewarm: true
   main_class: com.lambda.boot.BootApplication
   basePath: lambda-boot
 
@@ -19,6 +13,7 @@ provider:
   stage: v1
   profile: ${opt:profile, "default"}
   endpointType: REGIONAL
+  websocketApiRouteSelectionExpression: $request.body.action
 
 package:
   individually: true
@@ -29,12 +24,25 @@ functions:
       artifact: target/boot-0.0.1-SNAPSHOT-lambda-package.zip
     handler: com.lambda.boot.StreamLambdaHandler
     events:
-      - websocket: $connect
+      - websocket:
+          route: $connect
+      - websocket:
+          route: $disconnect
+      - websocket:
+          route: $default
       - http:
           path: /chat
           method: ANY
           cors: true
       - http:
           path: /login
+          method: ANY
+          cors: true
+      - http:
+          path: /ws
+          method: ANY
+          cors: true
+      - http:
+          path: /send
           method: ANY
           cors: true

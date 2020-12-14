@@ -1,27 +1,21 @@
 package com.lambda.boot;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import com.amazonaws.serverless.exceptions.ContainerInitializationException;
 import com.amazonaws.serverless.proxy.model.AwsProxyRequest;
 import com.amazonaws.serverless.proxy.model.AwsProxyResponse;
 import com.amazonaws.serverless.proxy.spring.SpringBootLambdaContainerHandler;
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestStreamHandler;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class StreamLambdaHandler implements RequestStreamHandler {
+    private static final Logger LOGGER = LogManager.getLogger(StreamLambdaHandler.class);
+
     private static SpringBootLambdaContainerHandler<AwsProxyRequest, AwsProxyResponse> handler;
-
-//    for even better performance?
-
-//    public StreamLambdaHandler() throws ContainerInitializationException {
-//        handler = new SpringBootProxyHandlerBuilder<AwsProxyRequest>()
-//                .defaultProxy()
-//                .asyncInit()
-//                .springBootApplication(BootApplication.class)
-//                .buildAndInitialize();
-//    }
 
     static {
         try {
@@ -37,6 +31,7 @@ public class StreamLambdaHandler implements RequestStreamHandler {
     @Override
     public void handleRequest(InputStream inputStream, OutputStream outputStream, Context context)
             throws IOException {
+        LOGGER.info("-------HANDLER REQUEST-------");
         handler.proxyStream(inputStream, outputStream, context);
     }
 }
