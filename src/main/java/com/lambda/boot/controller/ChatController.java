@@ -11,8 +11,8 @@ import java.util.Random;
 import javax.servlet.http.HttpServletRequest;
 import com.amazonaws.services.apigatewaymanagementapi.AmazonApiGatewayManagementApi;
 import com.amazonaws.services.apigatewaymanagementapi.model.PostToConnectionRequest;
-import com.lambda.boot.Storage;
 import com.lambda.boot.model.Chat;
+import com.lambda.boot.repository.ConnectionIdRepository;
 import com.lambda.boot.service.ChatService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -29,6 +29,8 @@ public class ChatController {
     private AmazonApiGatewayManagementApi client;
     @Autowired
     private ChatService chatService;
+    @Autowired
+    private ConnectionIdRepository connectionIdRepository;
 
     @RequestMapping(path = "/chat", method = RequestMethod.POST)
     public String createChat(HttpServletRequest request) {
@@ -39,7 +41,8 @@ public class ChatController {
     @RequestMapping(path = "/ws", method = RequestMethod.POST)
     public String wsConnection(@RequestBody Map<String,Object> body) {
         String connectionId = (String)body.get("connectionId");
-        Storage.connectionID = connectionId; // save websocket connection id to the temporary storage
+        connectionIdRepository.put("1", connectionId);
+//        Storage.connectionID = connectionId; // save websocket connection id to the temporary storage
         LOGGER.info("BODY: " + body);
         return "{\"connectionId\": \"" + connectionId + "\", \"body\": {\"message\": \"all is fine\"}}";
     }
@@ -52,8 +55,9 @@ public class ChatController {
     @RequestMapping(path = "/send", method = RequestMethod.GET)
     public String sendMessage() {
         PostToConnectionRequest request = new PostToConnectionRequest();
-        request.withConnectionId(Storage.connectionID);
-        LOGGER.info("CONNECTION ID: "+ Storage.connectionID);
+        String connectionId = connectionIdRepository.getByKey("1");
+        request.withConnectionId(connectionId);
+        LOGGER.info("CONNECTION ID: "+ connectionId);
         String message = String.format("{\n" +
             "  \"event\": \"message\",\n" +
             "  \"data\": [\n" +
@@ -66,7 +70,7 @@ public class ChatController {
         ByteBuffer messageResponse = mapStringToByteBuffer(message);
         request.withData(messageResponse);
         client.postToConnection(request);
-        return "done - 200 OK with connection id - " + Storage.connectionID;
+        return "done - 200 OK with connection id - " + connectionId;
     }
 
     private ByteBuffer mapStringToByteBuffer(String message) {

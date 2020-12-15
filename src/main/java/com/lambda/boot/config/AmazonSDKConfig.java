@@ -11,15 +11,13 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class AmazonSDKConfig {
-
-    @Value("${websocket.url}")
+    @Value("${websocket_url}")
     private String websocketUrl;
-
-    @Value("${aws.access.key}")
+    @Value("${aws_access_key}")
     private String accessKey;
-
-    @Value("${aws.secret.key}")
+    @Value("${aws_secret_key}")
     private String secretKey;
+
     @Bean
     public AmazonApiGatewayManagementApi settingAPIGWConnection(){
         AmazonApiGatewayManagementApiClientBuilder builder = AmazonApiGatewayManagementApiClientBuilder.standard();
