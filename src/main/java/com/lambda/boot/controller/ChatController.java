@@ -42,7 +42,6 @@ public class ChatController {
     public String wsConnection(@RequestBody Map<String,Object> body) {
         String connectionId = (String)body.get("connectionId");
         connectionIdRepository.put("1", connectionId);
-//        Storage.connectionID = connectionId; // save websocket connection id to the temporary storage
         LOGGER.info("BODY: " + body);
         return "{\"connectionId\": \"" + connectionId + "\", \"body\": {\"message\": \"all is fine\"}}";
     }
